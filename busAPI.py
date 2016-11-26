@@ -36,8 +36,8 @@ def add_stop():
 
 
 def add_stop(stopname, lat, lon):
-    busstops['stopname'] = {'lat': request.form['lat'], 'lon': request.form['lon'], 'pet': {'mood': None, 'distance': 0, 'hunger': 0, 'thirst': 0}}
-    return jsonify(busstops)
+    busstops[stopname] = {'lat': lat, 'lon': lon, 'pet': {'mood': None, 'distance': 0, 'hunger': 0, 'thirst': 0}}
+    return
 
 @app.route('/addStop', methods=['GET'])
 def add_stop_page():
@@ -103,8 +103,8 @@ def update_mood(stopname, mood):
 
 @app.route('/scancode', methods=['POST'])
 def post_data():
-    print request
-    return data
+    print request.form.keys()[0]
+    return 'scanned'
 
 @app.route('/busstop/<string:stopname>', methods=['GET'])
 def get_stop(stopname):
@@ -121,5 +121,5 @@ def get_stop(stopname):
 
 
 if __name__ == '__main__':
+    add_stop('Gare', 49.110860, 6.176966)
     app.run(debug=True, port=80)
-    addStop('Gare', 49.110860, 6.176966)
