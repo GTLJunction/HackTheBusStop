@@ -97,14 +97,14 @@ def scan_code(stopname):
 
 def pet_eat(stopname, quantity):
     quantity = int(quantity[0])
-    mongo.busstopsdb.stops.update({'stopname' : stopname}, {'$inc' : {'pet.hunger' : quantity}})
-    mongo.busstopsdb.stops.update({'$gt' : 100}, {'$set' : {'pet.hunger' : 100}})
+    mongo.busstopsdb.stops.update_many({'stopname' : stopname}, {'$inc' : {'pet.hunger' : quantity}})
+    mongo.busstopsdb.stops.update_many({'pet.hunger' : {'$gt' : 100}}, {'$set' : {'pet.hunger' : 100}})
     return ('EAT', quantity)
 
 def pet_drink(stopname, quantity):
     quantity = int(quantity[0])
-    mongo.busstopsdb.stops.update({'stopname' : stopname}, {'$inc' : {'pet.thirst' : quantity}})
-    mongo.busstopsdb.stops.update({'$gt' : 100}, {'$inc' : {'pet.thirst' : 100}})
+    mongo.busstopsdb.stops.update_many({'stopname' : stopname}, {'$inc' : {'pet.thirst' : quantity}})
+    mongo.busstopsdb.stops.update_many({'pet.thirst' : {'$gt' : 100}}, {'$set' : {'pet.thirst' : 100}})
     return ('DRINK', quantity)
 
 def pet_walk(stopname, coordinates):
@@ -112,13 +112,13 @@ def pet_walk(stopname, coordinates):
     lon = float(coordinates[1])
     curr = mongo.busstopsdb.stops.find_one({'stopname' : stopname}, {'lat' : 1, 'lon' : 1})
     distance = gpxpy.geo.haversine_distance(float(curr['lat']), float(curr['lon']), lat, lon)/1000.0
-    mongo.busstopsdb.stops.update({'stopname' : stopname}, {'$set' : {'pet.distance' : distance}})
+    mongo.busstopsdb.stops.update_many({'stopname' : stopname}, {'$inc' : {'pet.distance' : distance}})
     return ('WALK', distance)
 
 def pet_play(stopname, quantity):
     quantity = int(quantity[0])
-    mongo.busstopsdb.stops.update({'stopname' : stopname}, {'$inc' : {'pet.interaction' : quantity}})
-    mongo.busstopsdb.stops.update({'$gt' : 100}, {'$inc' : {'pet.interaction' : 100}})
+    mongo.busstopsdb.stops.update_many({'stopname' : stopname}, {'$inc' : {'pet.interaction' : quantity}})
+    mongo.busstopsdb.stops.update_many({'pet.interaction' : {'$gt' : 100}}, {'$set' : {'pet.interaction' : 100}})
     return ('PLAY', quantity)
     
 

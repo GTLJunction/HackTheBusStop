@@ -6,21 +6,21 @@ mongo = pymongo.MongoClient()
 
 def main():
     while True:
-        mongo.busstopsdb.stops.update(
+        mongo.busstopsdb.stops.update_many(
             {
                 'pet.hunger' : {'$gt' : 1}
             }, 
             {
                 '$inc' : {'pet.hunger' : -1.0/6.0}
             })
-        mongo.busstopsdb.stops.update(
+        mongo.busstopsdb.stops.update_many(
             {
                 'pet.thirst' : {'$gt' : 2}
             }, 
             {
                 '$inc' : {'pet.thirst' : -2.0/6.0}
             })
-        mongo.busstopsdb.stops.update(
+        mongo.busstopsdb.stops.update_many(
             {
                 'pet.interaction' : {'$gt' : 3}
             }, 
