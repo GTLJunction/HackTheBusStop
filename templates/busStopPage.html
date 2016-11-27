@@ -117,17 +117,55 @@
                 <br><br><br><br>
 
                 <!--Needs of Pet-->
-                <div class="mood">
+
+                <div id="mood">
                     <h4>Mood: {{stopdict.pet.mood}}</h4>
                 </div>
+
 
                 <div class = "miles">
                     <h4>Miles walked: {{stopdict.pet.distance}} km</h4>
                 </div>
 
+
+                <script>
+                    var needs = setInterval(function(){ decrement() }, 1000);
+                    
+                    var inter = {{ stopdict.pet.interaction }};
+                    var food = {{stopdict.pet.hunger}};
+                    var drink = {{stopdict.pet.thirst}};
+                    var hap = food *.25 + drink *.25 + inter * .5;
+
+                    var decrementinter = 3/60;
+                    var decrementfood = 1/60;
+                    var decrementdrink = 2/60;
+
+                    var decrarr = [decrementinter, decrementfood, decrementdrink];
+                    var needarr = [inter, food, drink];
+
+                    function decrement() {
+                        for (i=0; i<decrarr.length ; i++) {
+                            needarr[i] -= decrarr[i]
+                            if (needarr[i] <= 0){
+                                needarr[i = 0]
+                            }
+                        }
+                        inter = needarr[0];
+                        food = needarr[1];
+                        drink = needarr[2];
+                        hap = inter*.5 + food*.25 + drink*.25;
+
+                        $('#drinkbar').attr('aria-valuenow', drink).css('width', drink+'%');
+                        $('#foodbar').attr('aria-valuenow', food).css('width', food+'%');
+                        $('#hapbar').attr('aria-valuenow', hap).css('width', hap+'%');
+                        return hap, inter, food, drink;
+                    }
+
+                </script>
+
                 <h4>Water</h4>
                 <div class="progress">
-                  <div class="progress-bar" role="progressbar" aria-valuenow={{stopdict.pet.thirst}}
+                  <div id="drinkbar" class="progress-bar" role="progressbar" aria-valuenow={{stopdict.pet.thirst}}
                   aria-valuemin="0" aria-valuemax="100" style="width:{{stopdict.pet.thirst}}">
                     {{stopdict.pet.thirst}}
                   </div>
@@ -135,7 +173,7 @@
 
                 <h4>Food</h4>
                 <div class="progress">
-                  <div class="progress-bar" role="progressbar" aria-valuenow={{stopdict.pet.hunger}}
+                  <div id="foodbar" class="progress-bar" role="progressbar" aria-valuenow={{stopdict.pet.hunger}}
                   aria-valuemin="0" aria-valuemax="100" style="width:{{stopdict.pet.hunger}}">
                     {{stopdict.pet.hunger}}
                   </div>
@@ -143,9 +181,9 @@
 
                 <h4>Happiness</h4>
                 <div class="progress">
-                  <div class="progress-bar" role="progressbar" aria-valuenow={{stopdict.pet.happiness}}
-                  aria-valuemin="0" aria-valuemax="100" style="width:{{stopdict.pet.happiness}}">
-                    {{stopdict.pet.hunger}}
+                  <div id="hapbar" class="progress-bar" role="progressbar" aria-valuenow={{stopdict.pet.happiness}}
+                  aria-valuemin="0" aria-valuemax="100" style="width:{{stopdict.pet.happiness}}%">
+                    <p id="happiness"></p>
                   </div>
                 </div>
 
