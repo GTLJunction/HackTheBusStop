@@ -7,27 +7,25 @@ mongo = pymongo.MongoClient()
 def main():
     while True:
         mongo.busstopsdb.stops.update_many(
+            {}, 
             {
-                'pet.hunger' : {'$gt' : 1}
-            }, 
-            {
-                '$inc' : {'pet.hunger' : -1.0/6.0}
+                '$inc' : {'pet.hunger' : -2.0/60.0}
             })
         mongo.busstopsdb.stops.update_many(
+            {}, 
             {
-                'pet.thirst' : {'$gt' : 2}
-            }, 
-            {
-                '$inc' : {'pet.thirst' : -2.0/6.0}
+                '$inc' : {'pet.thirst' : -4.0/60.0}
             })
         mongo.busstopsdb.stops.update_many(
+            {}, 
             {
-                'pet.interaction' : {'$gt' : 3}
-            }, 
-            {
-                '$inc' : {'pet.interaction' : -3/6.0}
+                '$inc' : {'pet.interaction' : -6.0/60.0}
             })
-        time.sleep(10)
+        mongo.busstopsdb.stops.update_many({'pet.thirst' : {'$lt' : 0}}, {'$set' : {'pet.thirst' : 0}})
+        mongo.busstopsdb.stops.update_many({'pet.hunger' : {'$lt' : 0}}, {'$set' : {'pet.thirst' : 0}})
+        mongo.busstopsdb.stops.update_many({'pet.interaction' : {'$lt' : 0}}, {'$set' : {'pet.thirst' : 0}})
+
+        time.sleep(1)
 
 if __name__ == '__main__':
     main()
