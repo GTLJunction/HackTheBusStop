@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bus Stop Pet</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="/static/jquery-1.9.1.min.js"></script>
+  <script src="/static/html5-qrcode.min.js"></script>
+  <script src="/static/main.js"></script>
+
+
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <!-- Bootstrap Core CSS -->
+    <!--<link href="css/bootstrap.min.css" rel="stylesheet">-->
+
+    <!-- Custom CSS -->
+    <style>
+    body {
+        padding-top: 70px;
+        /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    }
+
+    </style>
+
+    <body>
+        <center>
+            <h2>{{stopname}}'s QR Scanner</h2>
+
+            <!--QR Code scanner-->
+
+            <div id="demo">
+                <div id="reader" style="width:50%;height:400px">
+                </div>
+            </div>
+
+            <a href="/templates/busstoppage.html" class="btn btn-info" role="button">Cancel</a>
+
+        </center>
+    </body>
+    </html>
