@@ -7,9 +7,6 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="/static/jquery-1.9.1.min.js"></script>
-  <script src="/static/html5-qrcode.min.js"></script>
-  <script src="/static/main.js"></script>
 
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -36,6 +33,11 @@
        .mood{
            vertical-align: bottom;
        }
+       #dog{
+           height: 40%;
+           width: 40%;
+           float: left;
+       }
 
     </style>
 
@@ -57,8 +59,6 @@
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                     <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="#">{{stopname}}'s Pet</a>
@@ -109,23 +109,10 @@
                         </script>
                 </div>
 
-                <!-- <script>
-                    gifs = {happy:3000, sad:2000, yes:2500} //replace with actual gif times in ms
 
-                    $(document).ready(
-                        function() {
-                            setInterval(function() {
-                                // what will refresh
-                                // var randomnumber = Math.floor(Math.random() * 100);
-                                // $('#show').text(
-                                //         'I am getting refreshed every 3 seconds..! Random Number ==> '
-                                //                 + randomnumber);
-                                $('#dog').ready(function(){
-
-                                });
-                            }, gifs[{{mood}}]);
-                        });
-                </script> -->
+                <div class = "dog">
+                    <img src = '/static/src/{{stopdict.pet.mood}}.png'/>
+                </div>
 
                 <br><br><br><br>
 
@@ -140,29 +127,31 @@
 
                 <h4>Water</h4>
                 <div class="progress">
-                  <div class="progress-bar" role="progressbar" aria-valuenow={{hunger}}
-                  aria-valuemin="0" aria-valuemax="100" style="width:{{thirst}}">
+                  <div class="progress-bar" role="progressbar" aria-valuenow={{stopdict.pet.thirst}}
+                  aria-valuemin="0" aria-valuemax="100" style="width:{{stopdict.pet.thirst}}">
                     {{stopdict.pet.thirst}}
                   </div>
                 </div>
 
                 <h4>Food</h4>
                 <div class="progress">
-                  <div class="progress-bar" role="progressbar" aria-valuenow={{hunger}}
-                  aria-valuemin="0" aria-valuemax="100" style="width:{{hunger}}">
+                  <div class="progress-bar" role="progressbar" aria-valuenow={{stopdict.pet.hunger}}
+                  aria-valuemin="0" aria-valuemax="100" style="width:{{stopdict.pet.hunger}}">
+                    {{stopdict.pet.hunger}}
+                  </div>
+                </div>
+
+                <h4>Happiness</h4>
+                <div class="progress">
+                  <div class="progress-bar" role="progressbar" aria-valuenow={{stopdict.pet.happiness}}
+                  aria-valuemin="0" aria-valuemax="100" style="width:{{stopdict.pet.happiness}}">
                     {{stopdict.pet.hunger}}
                   </div>
                 </div>
 
                 <!--QR Code scanner-->
-                <button data-toggle="collapse" data-target="#demo">Scan Code</button>
+                <a href="/static/scan_code.html" class="btn btn-info" role="button">Scan Code</a>
 
-                    <div id="demo" class="collapse">
-                        <div id="reader" style="width:300px;height:250px">
-                        </div>
-
-                    </div>
-            </div>
         </div>
         <!-- /.row -->
 
