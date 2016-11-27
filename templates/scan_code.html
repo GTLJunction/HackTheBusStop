@@ -4,12 +4,27 @@
   <title>Bus Stop Pet</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="/static/jquery-1.9.1.min.js"></script>
   <script src="/static/html5-qrcode.min.js"></script>
-  <script src="/static/main.js"></script>
+  <script>
+  $(document).ready(function(){
+	$('#reader').html5_qrcode(function(data){
+		      $.post('/busstop/{{stopname}}/scancode', {"data":data}, function(){
+                  window.location.replace("/busstop/{{stopname}}")
+              });
+		},
+		function(error){
+			$('#read_error').html(error);
+		}, function(videoError){
+			$('#vid_error').html(videoError);
+		}
+	);
+});
+  </script>
 
 
 
@@ -42,7 +57,7 @@
                 </div>
             </div>
 
-            <a href="/{{stopname}}" class="btn btn-info" role="button">Cancel</a>
+            <a href="/busstop/{{stopname}}" class="btn btn-info" role="button">Cancel</a>
 
         </center>
     </body>

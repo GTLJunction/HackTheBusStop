@@ -1,7 +1,8 @@
 import flask
 import pymongo
 import gpxpy.geo
-
+from bson import Binary, Code
+from bson.json_util import dumps
 app = flask.Flask(__name__)
 mongo = pymongo.MongoClient()
 
@@ -11,8 +12,8 @@ mongo = pymongo.MongoClient()
 # ------------------------------------------------
 @app.route('/')
 def index():
-    return "Homepage under construction"
-    # return flask.render_template('index.html')
+    stops = mongo.busstopsdb.stops.find({})
+    return dumps(stops)
 
 
 
@@ -40,7 +41,7 @@ def new_stop():
         }
     }
     create_stop(stopdict)
-    return flask.redirect('/%s' % flask.request.form['stopname'])
+    return flask.redirect('/busstop/%s' % flask.request.form['stopname'])
 
 def create_stop(stopdict):
     mongo.busstopsdb.stops.insert(stopdict)
@@ -50,10 +51,9 @@ def create_stop(stopdict):
 # ------------------------------------------------
 # BUS STOP
 # ------------------------------------------------
-@app.route('/<string:stopname>')
+@app.route('/busstop/<string:stopname>')
 def busstop_page(stopname):
     busstop = mongo.busstopsdb.stops.find_one({'stopname' : stopname})
-    print busstop
     happiness = busstop['pet']['interaction'] * .5 + busstop['pet']['thirst'] * .25 + busstop['pet']['hunger'] * .25
     return flask.render_template('bus_stop.html', busstop=busstop, happiness=happiness)
 
@@ -62,60 +62,68 @@ def busstop_page(stopname):
 # ------------------------------------------------
 # QR SCAN
 # ------------------------------------------------
-@app.route('/<string:stopname>/scancode', methods = ['GET'])
+@app.route('/busstop/<string:stopname>/scancode', methods = ['GET'])
 def scan_code_page(stopname):
     return flask.render_template('scan_code.html', stopname = stopname)
 
-QR_DATA_FUNCTIONS = {
-        'EAT' : 'pet_eat', 
-        'DRINK' : 'pet_drink', 
-        'WALK' : 'pet_walk', 
-        'PLAY' : 'pet_play'
-    }
+QR_DATA_FUNCTIONS = ['EAT','DRINK','WALK','PLAY']
 # WALK|45|60,EAT|12,DRINK|3
 # INTERACT|4
 
     
-@app.route('/<string:stopname>/scancode', methods = ['POST'])
+@app.route('/busstop/<string:stopname>/scancode', methods = ['POST'])
 def scan_code(stopname):
     if not flask.request.form:
         flask.abort(400)
         return
-    
-    qrdata = flask.request.form.keys[0]
+    print flask.request.form['data']
+    qrdata = flask.request.form['data']
     ops = [func.split('|') for func in qrdata.split(',')]
     output = []
     for op in ops:
+        print op
         if op[0] in QR_DATA_FUNCTIONS:
-            output.append(QR_DATA_FUNCTIONS[op[0]](stopname, op[1:]))
+            if op[0] == 'EAT':
+                output.append(pet_eat(stopname, op[1:]))
+            elif op[0] == 'DRINK':
+                output.append(pet_drink(stopname, op[1:]))
+            elif op[0] == 'WALK':
+                output.append(pet_walk(stopname, op[1:]))
+            elif op[0] == 'PLAY':
+                output.append(pet_play(stopname, op[1:]))
             
     print output
-    return flask.redirect('/%s' % stopname)
+    return flask.redirect('/busstop/%s' % stopname)
 
 def pet_eat(stopname, quantity):
+    quantity = int(quantity[0])
     mongo.busstopsdb.stops.update({'stopname' : stopname}, {'$inc' : {'pet.hunger' : quantity}})
     mongo.busstopsdb.stops.update({'$gt' : 100}, {'$set' : {'pet.hunger' : 100}})
     return ('EAT', quantity)
 
 def pet_drink(stopname, quantity):
+    quantity = int(quantity[0])
     mongo.busstopsdb.stops.update({'stopname' : stopname}, {'$inc' : {'pet.thirst' : quantity}})
     mongo.busstopsdb.stops.update({'$gt' : 100}, {'$inc' : {'pet.thirst' : 100}})
     return ('DRINK', quantity)
 
 def pet_walk(stopname, coordinates):
+    lat= float(coordinates[0])
+    lon = float(coordinates[1])
     curr = mongo.busstopsdb.stops.find_one({'stopname' : stopname}, {'lat' : 1, 'lon' : 1})
-    distance = gpxpy.geo.haversine_distance(curr['lat'], curr['lon'], coordinates[0], coordinates[1])/1000.0
+    distance = gpxpy.geo.haversine_distance(float(curr['lat']), float(curr['lon']), lat, lon)/1000.0
     mongo.busstopsdb.stops.update({'stopname' : stopname}, {'$set' : {'pet.distance' : distance}})
     return ('WALK', distance)
 
 def pet_play(stopname, quantity):
+    quantity = int(quantity[0])
     mongo.busstopsdb.stops.update({'stopname' : stopname}, {'$inc' : {'pet.interaction' : quantity}})
     mongo.busstopsdb.stops.update({'$gt' : 100}, {'$inc' : {'pet.interaction' : 100}})
     return ('PLAY', quantity)
     
 
 
-def main(debug=False, host='127.0.0.1', port=80):
+def main(debug=True, host='127.0.0.1', port=80):
     app.run(debug=debug, host=host, port=port)
 
 if __name__ == '__main__':

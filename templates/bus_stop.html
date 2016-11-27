@@ -4,6 +4,7 @@
   <title>Bus Stop Pet</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -108,19 +109,17 @@
                         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAuylVN12tD-DUlV1FeU_9wh2NQonbI3wI&callback=initMap">
                         </script>
                 </div>
-
-                <>
                 <div class = "dog">
                     {% if happiness >= 85 %}
-                        <img id='moodimg' src = '/static/src/vhappy.png'/>
+                        <img id='moodimg' src = '/static/src/vhappy.jpg'/>
                     {% elif happiness >= 60 %}
-                        <img id='moodimg' src = '/static/src/happy.png'/>
+                        <img id='moodimg' src = '/static/src/happy.jpg'/>
                     {% elif happiness >= 40 %}
-                        <img id='moodimg' src = '/static/src/neutral.png'/>
+                        <img id='moodimg' src = '/static/src/neutral.jpg'/>
                     {% elif happiness >= 15 %}
-                        <img id='moodimg' src = '/static/src/sad.png'/>
+                        <img id='moodimg' src = '/static/src/sad.jpg'/>
                     {% else %}
-                        <img id='moodimg' src = '/static/src/vsad.png'/>
+                        <img id='moodimg' src = '/static/src/vsad.jpg'/>
                     {% endif %}
                 </div>
 
@@ -143,8 +142,8 @@
                 </div>
 
 
-                <div class = "miles">
-                    <h4>Miles walked: {{busstop.pet.distance}} km</h4>
+                <div class = "kms">
+                    <h4>Distance walked: {{busstop.pet.distance}} km</h4>
                 </div>
 
 
@@ -176,16 +175,16 @@
                         hap = inter*.5 + food*.25 + drink*.25;
                         if (hap == 85){
                             $('#moodlabel').html('Mood: Happy!');
-                            $('#moodimg').attr('src', '/static/src/happy.png');
+                            $('#moodimg').attr('src', '/static/src/happy.jpg');
                         } else if (hap == 60) {
                             $('#moodlabel').html('Mood: Content');
-                            $('#moodimg').attr('src', '/static/src/neutral.png');
+                            $('#moodimg').attr('src', '/static/src/neutral.jpg');
                         } else if (hap == 40) {
                             $('#moodlabel').html('Mood: Sad :(');
-                            $('#moodimg').attr('src', '/static/src/sad.png');
+                            $('#moodimg').attr('src', '/static/src/sad.jpg');
                         } else if (hap == 15) {
                             $('#moodlabel').html("Mood: Very Sad and Lonely :'(");
-                            $('#moodimg').attr('src', '/static/src/vsad.png');
+                            $('#moodimg').attr('src', '/static/src/vsad.jpg');
                         }
                         $('#drinkbar').attr('aria-valuenow', drink).css('width', drink+'%');
                         $('#foodbar').attr('aria-valuenow', food).css('width', food+'%');
@@ -217,7 +216,7 @@
                 </div>
 
                 <!--QR Code scanner-->
-                <a href="{{busstop.stopname}}/scancode" class="btn btn-info" role="button">Scan Code</a>
+                <a href="/busstop/{{busstop.stopname}}/scancode" class="btn btn-info" role="button">Scan Code</a>
 
         </div>
         <!-- /.row -->
